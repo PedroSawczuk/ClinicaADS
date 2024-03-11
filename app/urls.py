@@ -6,7 +6,7 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("relatorios/pacientes", PacientesListView.as_view(),
         name="relat_pacientes"),
-    path('relatorios/pdfpacientes', RelatPdfPacientes.as_view(),
+    path('relatorios/pdf/pdfpacientes', RelatPdfPacientes.as_view(),
          name='pdf_pacientes'),
 ]
 

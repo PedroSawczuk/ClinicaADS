@@ -24,7 +24,7 @@ class RelatPdfPacientes(View):
             'pacientes': pacientes,
         }
         
-        template = get_template("relatorios/pdfpacientes.html")
+        template = get_template("relatorios/pdf/pdfpacientes.html")
         html = template.render(data)
         result = BytesIO()
         try:

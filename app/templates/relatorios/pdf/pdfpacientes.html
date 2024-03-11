@@ -11,12 +11,39 @@
         h1 {
             text-align: center;
             font-size: 2em;
+            margin-bottom: 20px;
         }
 
         table {
-            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        td {
             text-align: center;
-            margin: 0 auto;
+        }
+
+        .no-patients {
+            font-style: italic;
+            color: #999;
         }
     </style>
 

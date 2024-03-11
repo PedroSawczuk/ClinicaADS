@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Clinica</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>Minha Clinica</h1>
+        </header>
+
+        <article>   
+            <a href="{% url 'relat_pacientes' %}" role="button">Relatórios Paciente</a>
+            <a href="{% url 'nome_idade' %}" role="button">Relatórios Paciente por Convênio</a>
+        </article>
+    </main>
+
+</body>
+
+</html>

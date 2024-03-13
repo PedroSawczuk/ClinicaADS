@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios Pacientes por Convênio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+
+</head>
+
+<body>
+    <main class="container">
+        <article>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Convênio</th>
+                        <th>Pacientes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for convenio in convenios %}
+                    <tr>
+                        <td>{{ convenio.nome }}</td>
+                        <td>
+                            <ul>
+                                {% for paciente in convenio.pacientes %}
+                                <li>{{ paciente.nome }}</li>
+                                {% empty %}
+                                <li>Nenhum paciente associado</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">Nenhum convênio cadastrado</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <table>
+                <p>
+                    <a href="{% url 'pdf_pacientes_por_convenio' %}" role="button">Gerar PDF</a>
+                </p>
+            </table>
+        </article>
+    </main>
+</body>
+
+</html>

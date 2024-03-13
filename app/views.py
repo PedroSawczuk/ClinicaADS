@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
+from django.template.loader import render_to_string
 
 class HomeView(TemplateView):
     template_name = 'index.html'
@@ -34,4 +35,43 @@ class RelatPdfPacientes(View):
         except Exception as e:
             print(e)
             return None
-            
+    
+class PacientesConvenioListView(ListView):
+    template_name = 'relatorios/pacientes_por_convenio.html'
+    model = Convenio
+    context_object_name = 'convenios'
+    
+    def get_queryset(self):
+        # Recuperar todos os convênios
+        convenios = Convenio.objects.all()
+        # Iterar sobre os convênios e anotar os pacientes associados a cada um
+        for convenio in convenios:
+            pacientes = Paciente.objects.filter(possui__convenio=convenio)
+            convenio.pacientes = pacientes
+        return convenios
+        
+class RelatPdfPacientesConvenio(View):
+
+    def get(self, request):
+        convenios = Convenio.objects.all()
+        for convenio in convenios:
+            pacientes = Paciente.objects.filter(possui__convenio=convenio)
+            convenio.pacientes = pacientes
+        
+        data = {
+            'convenios': convenios,
+            'pacientes': pacientes,
+        }
+        
+        template = get_template("relatorios/pdf/pdfpacientes_por_convenio.html")  # Ajustado o caminho do template
+        html = template.render(data)
+        response = HttpResponse(content_type='application/pdf')
+        
+        result = BytesIO()
+        try:
+            pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), result)
+            response.write(result.getvalue())
+            return response
+        except Exception as e:
+            print(e)
+            return None

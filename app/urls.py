@@ -8,5 +8,10 @@ urlpatterns = [
         name="relat_pacientes"),
     path('relatorios/pdf/pdfpacientes', RelatPdfPacientes.as_view(),
          name='pdf_pacientes'),
+    
+    path("relatorios/pacientes_por_convenio", PacientesConvenioListView.as_view(),
+        name="relat_pacientes_por_convenio"),
+    path('relatorios/pdf/pdfpacientes_por_convenio', RelatPdfPacientesConvenio.as_view(),
+         name='pdf_pacientes_por_convenio'),
 ]
 

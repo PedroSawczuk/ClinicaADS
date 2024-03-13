@@ -16,9 +16,13 @@ urlpatterns = [
     
     path("relatorios/consultas_por_especialidades", ConsultaEspecialidadeListView.as_view(),
         name="relat_consultas_por_especialidades"),
-    
-    path("relatorios/pdf/pdfconsultas_por_especialidades", RelatPdfEspecialidadeConsultas.as_view(),
+        path("relatorios/pdf/pdfconsultas_por_especialidades", RelatPdfEspecialidadeConsultas.as_view(),
         name="pdf_consultas_por_especialidades"),
+    
+    path("relatorios/atendimento_por_especialidade", AtendimentoEspecialidadeListView.as_view(),
+        name="relat_atendimento_por_especialidade"),
+        path("relatorios/pdf/pdfatendimento_por_especialidade", RelatPdfAtendimentoEspecialidadeListView.as_view(),
+        name="pdf_atendimento_por_especialidade"),
 
 ]
 

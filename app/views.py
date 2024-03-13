@@ -1,6 +1,3 @@
-from io import BytesIO
-import os
-from django.shortcuts import render
 from django.views.generic import *
 from app.models import *
 from io import BytesIO
@@ -9,9 +6,9 @@ from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
 from django.db.models import Count
-from datetime import datetime
-from django.db.models.functions import ExtractMonth
+from django.db.models.functions import *
 from django.db.models import Count, F
+from django.template.loader import render_to_string
 
 class HomeView(TemplateView):
     template_name = 'index.html'
@@ -46,9 +43,7 @@ class PacientesConvenioListView(ListView):
     context_object_name = 'convenios'
     
     def get_queryset(self):
-        # Recuperar todos os convênios
         convenios = Convenio.objects.all()
-        # Iterar sobre os convênios e anotar os pacientes associados a cada um
         for convenio in convenios:
             pacientes = Paciente.objects.filter(possui__convenio=convenio)
             convenio.pacientes = pacientes
@@ -67,7 +62,7 @@ class RelatPdfPacientesConvenio(View):
             'pacientes': pacientes,
         }
         
-        template = get_template("relatorios/pdf/pdfpacientes_por_convenio.html")  # Ajustado o caminho do template
+        template = get_template("relatorios/pdf/pdfpacientes_por_convenio.html") 
         html = template.render(data)
         response = HttpResponse(content_type='application/pdf')
         
@@ -99,7 +94,7 @@ class RelatPdfEspecialidadeConsultas(View):
             'consultas_por_especialidade': consultas_por_especialidade,
         }
         
-        template = get_template("relatorios/pdf/pdfconsultas_por_especialidades.html")  # Ajustado o caminho do template
+        template = get_template("relatorios/pdf/pdfconsultas_por_especialidades.html") 
         html = template.render(data)
         
         response = HttpResponse(content_type='application/pdf')
@@ -114,3 +109,37 @@ class RelatPdfEspecialidadeConsultas(View):
             print(e)
         
         return HttpResponse('Ocorreu um erro ao gerar o PDF.', content_type='text/plain')
+        
+class AtendimentoEspecialidadeListView(ListView):
+    template_name = 'relatorios/atendimento_por_especialidade.html'
+    context_object_name = 'atendimento_por_especialidade'
+
+    def get_queryset(self):
+        especialidades = Medico.objects.values_list('especialidade', flat=True).distinct()
+
+        atendimentos_por_especialidade = []
+        for especialidade in especialidades:
+            atendimentos = Consulta.objects.filter(medico__especialidade=especialidade).annotate(month=ExtractMonth('data'),
+                                                      year=ExtractYear('data'))\
+                                            .values('month', 'year')\
+                                            .annotate(total=Count('id'))
+            atendimentos_por_especialidade.append({'especialidade': especialidade, 'atendimentos': atendimentos})
+
+        return atendimentos_por_especialidade
+    
+class RelatPdfAtendimentoEspecialidadeListView(View):
+    
+    def get(self, request):
+        atendimento_por_especialidade = AtendimentoEspecialidadeListView().get_queryset()
+
+        html_string = render_to_string('relatorios/pdf/pdfatendimento_por_especialidade.html', {'atendimento_por_especialidade': atendimento_por_especialidade})
+
+        result = BytesIO()
+
+        pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), result)
+
+        if not pdf.err:
+            response = HttpResponse(result.getvalue(), content_type='application/pdf')
+            return response
+
+        return HttpResponse('Erro ao gerar PDF: %s' % pdf.err)

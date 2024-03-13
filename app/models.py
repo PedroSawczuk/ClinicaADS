@@ -17,7 +17,7 @@ class Ambulatorio(models.Model):
 
 
 class Atende(models.Model):
-    medico = models.ForeignKey('Medico', models.DO_NOTHING, db_column='medico', primary_key=True)  # The composite primary key (medico, convenio) found, that is not supported. The first column is selected.
+    medico = models.ForeignKey('Medico', models.DO_NOTHING, db_column='medico', primary_key=True) 
     convenio = models.ForeignKey('Convenio', models.DO_NOTHING, db_column='convenio')
 
     class Meta:

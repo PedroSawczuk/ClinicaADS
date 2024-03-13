@@ -15,10 +15,15 @@
             <h1>Minha Clinica</h1>
         </header>
 
-        <article>   
+        <article>
             <a href="{% url 'relat_pacientes' %}" role="button">Relatórios Paciente</a>
             <a href="{% url 'relat_pacientes_por_convenio' %}" role="button">Relatórios Pacientes por Convênio</a>
-            <a href="{% url 'relat_consultas_por_especialidades' %}" role="button">Relatórios Consultas por Especialidades</a>
+            <a href="{% url 'relat_consultas_por_especialidades' %}" role="button">Relatórios Consultas por
+                Especialidades</a>
+        </article>
+        <article>
+            <a href="{% url 'relat_atendimento_por_especialidade' %}" role="button">Relatórios Atendimento por
+                Especialidades</a>
         </article>
     </main>
 

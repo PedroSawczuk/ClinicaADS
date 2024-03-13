@@ -99,12 +99,10 @@ class RelatPdfEspecialidadeConsultas(View):
             'consultas_por_especialidade': consultas_por_especialidade,
         }
         
-        template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "relatorios/pdf/pdfconsultas_por_especialidades.html")
-        template = get_template(template_path)
+        template = get_template("relatorios/pdf/pdfconsultas_por_especialidades.html")  # Ajustado o caminho do template
         html = template.render(data)
         
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="consultas_por_especialidade.pdf"'
         
         result = BytesIO()
         try:

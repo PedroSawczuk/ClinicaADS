@@ -13,5 +13,12 @@ urlpatterns = [
         name="relat_pacientes_por_convenio"),
     path('relatorios/pdf/pdfpacientes_por_convenio', RelatPdfPacientesConvenio.as_view(),
          name='pdf_pacientes_por_convenio'),
+    
+    path("relatorios/consultas_por_especialidades", ConsultaEspecialidadeListView.as_view(),
+        name="relat_consultas_por_especialidades"),
+    
+    path("relatorios/pdf/pdfconsultas_por_especialidades", RelatPdfEspecialidadeConsultas.as_view(),
+        name="pdf_consultas_por_especialidades"),
+
 ]
 

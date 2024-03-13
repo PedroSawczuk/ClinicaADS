@@ -18,3 +18,9 @@ class MedicoConvenioInline(admin.StackedInline):
 class MedicoAdmin(admin.ModelAdmin):
     list_display = ['crm', 'nome', 'telefone', 'salario', 'ambulatorio']
     inlines = [MedicoConvenioInline,]
+    
+@admin.register(models.Consulta)
+class ConsultaAdmin(admin.ModelAdmin):
+    list_display = ('data', 'horario', 'medico', 'paciente', 'convenio', 'porcent')
+    list_filter = ('data', 'horario', 'medico', 'paciente', 'convenio')
+    search_fields = ('medico__nome', 'paciente__nome')

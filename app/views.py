@@ -1,4 +1,5 @@
 from io import BytesIO
+import os
 from django.shortcuts import render
 from django.views.generic import *
 from app.models import *
@@ -7,7 +8,10 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
-from django.template.loader import render_to_string
+from django.db.models import Count
+from datetime import datetime
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count, F
 
 class HomeView(TemplateView):
     template_name = 'index.html'
@@ -75,3 +79,40 @@ class RelatPdfPacientesConvenio(View):
         except Exception as e:
             print(e)
             return None
+        
+class ConsultaEspecialidadeListView(ListView):
+    model = Consulta
+    template_name = 'relatorios/consultas_por_especialidade_mes.html'
+    context_object_name = 'consultas_por_especialidade'
+
+    def get_queryset(self):
+        return Consulta.objects.values('medico__especialidade').annotate(total=Count('id')).order_by('medico__especialidade')
+    
+            
+class RelatPdfEspecialidadeConsultas(View):
+
+    def get(self, request):
+        
+        consultas_por_especialidade = Consulta.objects.values('medico__especialidade').annotate(total=Count('id')).order_by('medico__especialidade')
+        
+        data = {
+            'consultas_por_especialidade': consultas_por_especialidade,
+        }
+        
+        template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "relatorios/pdf/pdfconsultas_por_especialidades.html")
+        template = get_template(template_path)
+        html = template.render(data)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="consultas_por_especialidade.pdf"'
+        
+        result = BytesIO()
+        try:
+            pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), result)
+            if not pdf.err:
+                response.write(result.getvalue())
+                return response
+        except Exception as e:
+            print(e)
+        
+        return HttpResponse('Ocorreu um erro ao gerar o PDF.', content_type='text/plain')

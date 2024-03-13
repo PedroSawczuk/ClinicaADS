@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Consultas por Especialidade</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+
+</head>
+
+<body>
+    <main class="container">
+        <article>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Especialidade</th>
+                        <th>Total de Consultas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in consultas_por_especialidade %}
+                    <tr>
+                        <td>{{ consulta.medico__especialidade }}</td>
+                        <td>{{ consulta.total }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">Nenhuma especialidade cadastrada</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </article>
+    </main>
+</body>
+
+</html>
